@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: robot
+  datasource:
+    username: mihail
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/robot
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+
+
+
+server:
+  port: 8080
