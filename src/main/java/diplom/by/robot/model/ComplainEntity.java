@@ -6,35 +6,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "complain")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentEntity {
+public class ComplainEntity {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int id;
 
+        private String text;
+
+        @CreationTimestamp
+        private LocalDateTime createdAt;
+
         @ManyToOne
-        @JoinColumn(name = "author_id", nullable = false)
+        @JoinColumn(name = "author_id")
         private UserEntity author;
 
         @ManyToOne
         @JoinColumn(name = "course_id")
         private CourseEntity course;
-
-        private String text;
-
-        @CreationTimestamp
-        private LocalDateTime created;
-
-        @UpdateTimestamp
-        private LocalDateTime updated;
 }

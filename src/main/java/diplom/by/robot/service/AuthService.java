@@ -50,17 +50,7 @@ public class AuthService {
                throw new EntityNotFoundException("Произошла ошибка при авторизации. Проверьте данные");
         }
 
-        public Map<String, String> refreshJwtTokens(String refreshToken) {
-                String role = getRoleByToken(refreshToken);
-                return jwtUtil.refreshTokens(refreshToken, role);
-        }
-
-        public ResponseEntity logout(String token) {
-        jwtUtil.invalidToken(token);
-        return new ResponseEntity(OK);
-        }
-
-        private UserEntity convertDtoToUser(UserDto userDto) {
+        public UserEntity convertDtoToUser(UserDto userDto) {
                 UserEntity userEntity = new UserEntity();
                 userEntity.setAge(userDto.getAge());
                 userEntity.setEmail(userDto.getEmail());
@@ -74,7 +64,17 @@ public class AuthService {
                 return userEntity;
         }
 
-        private void checkAvailabilityForRegistration(UserDto userDto) {
+        public Map<String, String> refreshJwtTokens(String refreshToken) {
+                String role = getRoleByToken(refreshToken);
+                return jwtUtil.refreshTokens(refreshToken, role);
+        }
+
+        public ResponseEntity logout(String token) {
+        jwtUtil.invalidToken(token);
+        return new ResponseEntity(OK);
+        }
+
+        public void checkAvailabilityForRegistration(UserDto userDto) {
                 Optional<UserEntity> user = userRepository.findByUsernameOrPhoneOrEmail(
                         userDto.getUsername(),
                         userDto.getPhone(),
@@ -82,7 +82,6 @@ public class AuthService {
                 if(user.isPresent()) {
                         throw new NonUniqueEntityException("пользователь с одним из таких полей уже существует");
                 }
-
         }
 
         private String getRoleByToken(String token) {

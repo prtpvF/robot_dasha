@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 @Table(name = "course")
 @Getter
 @Setter
+@DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseEntity {
@@ -21,7 +24,9 @@ public class CourseEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int id;
+        @Length(min=3, max=30, message = "имя должно быть от 3 до 30 символов в длину")
         private String name;
+        @Length(min = 10, max = 1000, message = "описание не может бытькороче 10 или длинее 1000 символов")
         private String description;
         private LocalDateTime startDate;
         private LocalDateTime endDate;
@@ -30,6 +35,8 @@ public class CourseEntity {
         @JoinColumn(name = "tutor_id", nullable = false)
         private UserEntity tutor;
 
+        private String pathToImg;
+
         @ManyToMany
         @JoinTable(
                 name = "student_course",
@@ -37,6 +44,9 @@ public class CourseEntity {
                 inverseJoinColumns = @JoinColumn(name = "course_id"))
         private List<UserEntity> students = new ArrayList<>();
 
-        @OneToMany(mappedBy = "courseId", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+        @OneToMany(mappedBy = "course", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
         private List<CommentEntity> comments = new ArrayList<>();
+
+        @OneToMany(mappedBy = "course")
+        private List<ComplainEntity> complains = new ArrayList<>();
 }

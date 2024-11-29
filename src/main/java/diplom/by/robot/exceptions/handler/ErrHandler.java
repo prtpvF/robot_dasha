@@ -1,6 +1,9 @@
 package diplom.by.robot.exceptions.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import diplom.by.robot.exceptions.FileExtensionException;
+import diplom.by.robot.exceptions.IllegalEntityException;
+import diplom.by.robot.exceptions.NonUniqueEntityException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -47,6 +50,30 @@ public class ErrHandler {
         @ExceptionHandler(JWTVerificationException.class)
         public ResponseEntity<Object> tokenHasExpiredHandler(JWTVerificationException e){
             HttpStatus status = HttpStatus.UNAUTHORIZED;
+            return new ResponseEntity<>(e.getMessage(),status);
+        }
+
+        @ExceptionHandler(IllegalEntityException.class)
+        public ResponseEntity<Object> illegalEntityExceptionHandler(IllegalEntityException e){
+            HttpStatus status = BAD_REQUEST;
+            return new ResponseEntity<>(e.getMessage(),status);
+        }
+
+        @ExceptionHandler(NonUniqueEntityException.class)
+        public ResponseEntity<Object> nonUniqueEntityExceptionHandler(NonUniqueEntityException e){
+            HttpStatus status = BAD_REQUEST;
+            return new ResponseEntity<>(e.getMessage(),status);
+        }
+
+        @ExceptionHandler(IllegalArgumentException.class)
+        public ResponseEntity<Object> illegalArgumentExceptionHandler(IllegalArgumentException e){
+            HttpStatus status = BAD_REQUEST;
+            return new ResponseEntity<>(e.getMessage(),status);
+        }
+
+        @ExceptionHandler(FileExtensionException.class)
+        public ResponseEntity<Object> fileExtensionExceptionHandler(FileExtensionException e){
+            HttpStatus status = BAD_REQUEST;
             return new ResponseEntity<>(e.getMessage(),status);
         }
 }

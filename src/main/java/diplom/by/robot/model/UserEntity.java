@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@DynamicUpdate
 @NoArgsConstructor
 public class UserEntity {
 
@@ -36,6 +38,7 @@ public class UserEntity {
         @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Неверный формат")
         private String phone;
         private String role;
+        private String pathToImage;
         private Boolean isActive;
         @Min(value = 10, message = "минимальный возраст - 10")
         @Max(value = 120, message = "максимальный возраст - 120")
@@ -46,6 +49,9 @@ public class UserEntity {
 
         @OneToMany(mappedBy = "tutor")
         private List<CourseEntity> courses = new ArrayList<>();
+
+        @OneToMany(mappedBy = "author")
+        private List<ComplainEntity> complains = new ArrayList<>();
 
         @ManyToMany
         private List<CourseEntity> studentCourses = new ArrayList<>();

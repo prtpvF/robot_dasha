@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                         "/auth/logout",
                         "/css/**",
                         "/js/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                //.requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/tutor/**").hasRole("TUTOR")
                 .anyRequest()
                 .permitAll());
