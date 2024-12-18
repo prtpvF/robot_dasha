@@ -15,7 +15,7 @@ public class AdminController {
 
         private final AdminService adminService;
 
-        @GetMapping("/tutors/all")
+        @GetMapping("/tutors")
         public List<UserDto> tutors() {
             return adminService.getTutors();
         }

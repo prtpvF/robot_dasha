@@ -12,7 +12,8 @@ spring:
       hibernate:
         show_sql: true
 
+save_path: /Users/mihail/Downloads/robot/uploads
 
 
 server:
-  port: 8080
+  port: 8081

@@ -8,6 +8,7 @@ import diplom.by.robot.model.UserEntity;
 import diplom.by.robot.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,10 @@ public class AuthService {
         private final JwtUtil jwtUtil;
 
 
-        public ResponseEntity registration(UserDto userDto) {
+        public UserDto registration(UserDto userDto) {
                 checkAvailabilityForRegistration(userDto);
                 userRepository.save(convertDtoToUser(userDto));
-                return new ResponseEntity(OK);
+                return userDto;
         }
 
         public Map<String, String> login(LoginDto loginDto) {

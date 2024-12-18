@@ -1,8 +1,10 @@
 package diplom.by.robot.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import diplom.by.robot.dto.CourseDto;
 import diplom.by.robot.dto.UserDto;
 import diplom.by.robot.exceptions.IllegalEntityException;
+import diplom.by.robot.exceptions.NonUniqueEntityException;
 import diplom.by.robot.jwt.JwtUtil;
 import diplom.by.robot.model.CourseEntity;
 import diplom.by.robot.model.UserEntity;
@@ -12,11 +14,13 @@ import diplom.by.robot.util.ConverterUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static diplom.by.robot.util.RoleEnum.TUTOR;
@@ -39,6 +43,7 @@ public class AdminService {
         private final UserService userService;
         private final AuthService authService;
         private final JwtUtil jwtUtil;
+        private final ModelMapper modelMapper;
 
         @Transactional
         public ResponseEntity changePersonStatus(String username,
@@ -56,11 +61,12 @@ public class AdminService {
 
         public ResponseEntity updateTutor(UserDto userDto, int id) {
             UserEntity tutor = userService.findUserById(id);
-            authService.checkAvailabilityForRegistration(userDto);
+            processUpdate(userDto);
             if(userDto.getImage() != null) {
                 tutor.setPathToImage(imageService.saveImage(userDto.getImage()));
             }
-            BeanUtils.copyProperties(userDto, tutor);
+            tutor.setId(id);
+            modelMapper.map(userDto, tutor);
             userRepository.save(tutor);
             return new ResponseEntity(OK);
         }
@@ -90,5 +96,27 @@ public class AdminService {
             return users.stream()
                     .map(converterUtil::convertUserToUserDto)
                     .collect(Collectors.toList());
+        }
+
+        public void processUpdate(UserDto userDto) {
+
+            if (userDto.getEmail() != null) {
+                 userRepository.findByEmail(userDto.getEmail()).ifPresent(
+                         ex -> new NonUniqueEntityException("пользователь с такими данными уже существует")
+                 );
+            }
+
+            if (userDto.getPhone() != null) {
+                userRepository.findByPhone(userDto.getPhone()).ifPresent(
+                        ex -> new NonUniqueEntityException("пользователь с такими данными уже существует")
+                );
+            }
+
+            if (userDto.getUsername() != null) {
+                userRepository.findByUsername(userDto.getUsername()).ifPresent(
+                        ex -> new NonUniqueEntityException("пользователь с такими данными уже существует")
+                );
+            }
+
         }
 }

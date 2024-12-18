@@ -6,20 +6,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/course")
+
 public class CourseController {
 
         private final CourseService courseService;
 
-        @PostMapping("/")
-        public ResponseEntity createCourse(@ModelAttribute CourseDto courseDto) {
-            return courseService.createCourse(courseDto);
+        @PostMapping("/new")
+        public ResponseEntity createCourse(@ModelAttribute CourseDto courseDto,
+                                           @RequestHeader("Authorization")String token) {
+            return courseService.createCourse(courseDto, token);
         }
 
-        @DeleteMapping("/{id}")
-        public ResponseEntity deleteCourse(@PathVariable("id") int id) {
-           return courseService.deleteCourse(id);
+//        @DeleteMapping("/{id}")
+//        public ResponseEntity deleteCourse(@PathVariable("id") int id) {
+//           return courseService.deleteCourse(id);
+//        }
+
+        @GetMapping("/all")
+        public List<CourseDto> getAllCourses() {
+            return courseService.getAll();
         }
 }
