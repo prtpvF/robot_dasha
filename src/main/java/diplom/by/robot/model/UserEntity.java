@@ -55,4 +55,8 @@ public class UserEntity {
 
         @ManyToMany
         private List<CourseEntity> studentCourses = new ArrayList<>();
+
+        public void addCourse(CourseEntity course) {
+                courses.add(course);
+        }
 }

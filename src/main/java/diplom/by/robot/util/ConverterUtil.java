@@ -1,16 +1,12 @@
 package diplom.by.robot.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import diplom.by.robot.dto.CourseDto;
-import diplom.by.robot.dto.UserDto;
-import diplom.by.robot.model.CourseEntity;
-import diplom.by.robot.model.UserEntity;
+import diplom.by.robot.dto.*;
+import diplom.by.robot.model.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.time.ZonedDateTime;
+import java.time.ZoneId;
 
 @Component
 @RequiredArgsConstructor
@@ -33,27 +29,79 @@ public class ConverterUtil {
                     .build();
         }
 
-        public CourseDto convertSmallCourseToCourseDto(CourseEntity course) {
-           return CourseDto.builder()
-                    .id(course.getId())
-                    .name(course.getName())
-                   .pathToFile(course.getPathToImg())
-                    .tutorUsername(course.getTutor().getUsername())
+        public CommentDto convertCommentToCommentDto(CommentEntity comment) {
+            return CommentDto.builder()
+                    .id(comment.getId())
+                    .courseId(comment.getCourse().getId())
+                    .comment(comment.getText())
+                    .author(comment.getAuthor().getUsername())
                     .build();
         }
 
-    public CourseDto convertCourseToDto(CourseEntity course) {
-        return CourseDto.builder()
-                .id(course.getId())
-                .name(course.getName())
-                .pathToFile(course.getPathToImg())
-                .startDate(course.getStartDate().toString())
-                .endDate(course.getEndDate().toString())
-                .tutorUsername(course.getTutor().getUsername())
+        public EventDto convertEventToEventDto(EventEntity event) {
+            return EventDto.builder()
+                    .id(event.getId())
+                    .name(event.getName())
+                    .dateOfEvent(event.getDateOfEvent().atZone(ZoneId.of("Europe/Minsk")))
+                    .description(event.getDescription())
+                    .pathToImage(event.getPathToImage())
+                    .build();
+        }
+
+        public EventEntity convertEventDtoToEventEntity(EventDto eventDto) {
+           return  modelMapper.map(eventDto, EventEntity.class);
+        }
+
+        public UserDto convertCourseParticipantToUserDto(UserEntity user) {
+        return UserDto.builder()
+                .phone(user.getPhone())
+                .age(user.getAge())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getUsername())
+                .pathToImage(user.getPathToImage())
+                .role(user.getRole())
+                .email(user.getEmail())
                 .build();
     }
 
+        public UserDto convertSmallUserToUserDto(UserEntity user) {
+            return UserDto.builder()
+                    .username(user.getUsername())
+                    .phone(user.getPhone())
+                    .email(user.getEmail())
+                    .build();
+        }
+
+        public CourseDto convertSmallCourseToCourseDto(CourseEntity course) {
+            CourseDto courseDto = new CourseDto();
+            courseDto.setId(course.getId());
+            courseDto.setName(course.getName());
+            courseDto.setPathToFile(course.getPathToImg());
+            courseDto.setTutorUsername(course.getTutor().getUsername());
+        return courseDto;
+        }
+
+        public CourseDto convertCourseToDto(CourseEntity course) {
+            CourseDto courseDto = new CourseDto();
+                courseDto.setId(course.getId());
+                courseDto.setName(course.getName());
+                courseDto.setPathToFile(course.getPathToImg());
+                courseDto.setStartDate(course.getStartDate().toString());
+                courseDto.setEndDate(course.getEndDate().toString());
+                courseDto.setTutorUsername(course.getTutor().getUsername());
+                return courseDto;
+        }
+
         public CourseEntity convertCourseForCreating(CourseDto courseDto) {
             return modelMapper.map(courseDto, CourseEntity.class);
+        }
+
+        public ParticipationRequestDto participationRequestToDto(ParticipationRequestEntity request) {
+            return ParticipationRequestDto.builder()
+                    .id(request.getId())
+                    .author(convertSmallUserToUserDto(request.getAuthor()))
+                    .course(convertSmallCourseToCourseDto(request.getCourse()))
+                    .build();
         }
 }

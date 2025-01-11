@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.net.http.HttpHeaders;
 import java.util.Map;
 
+/**
+ * This controller contains endpoint what connected with auth(login, registration) business logic
+ * Make with REST architecture
+ * */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")

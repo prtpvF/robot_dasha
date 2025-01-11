@@ -36,17 +36,15 @@ import static org.springframework.http.HttpStatus.OK;
 public class AdminService {
 
         private final UserRepository userRepository;
-        private final CourseRepository courseRepository;
         private final ConverterUtil converterUtil;
         private final ImageService imageService;
-        private final CourseService courseService;
         private final UserService userService;
         private final AuthService authService;
         private final JwtUtil jwtUtil;
         private final ModelMapper modelMapper;
 
         @Transactional
-        public ResponseEntity changePersonStatus(String username,
+        public ResponseEntity<?> changePersonStatus(String username,
                                                  Boolean isBanned,
                                                  String token) {
             String adminUsername = jwtUtil.validateTokenAndRetrieveClaim(token);
@@ -56,10 +54,10 @@ public class AdminService {
             UserEntity user = userService.findUserByUsername(username);
             user.setIsActive(isBanned);
             userRepository.save(user);
-            return new ResponseEntity(OK);
+            return new ResponseEntity<>(OK);
         }
 
-        public ResponseEntity updateTutor(UserDto userDto, int id) {
+        public ResponseEntity<?> updateTutor(UserDto userDto, int id) {
             UserEntity tutor = userService.findUserById(id);
             processUpdate(userDto);
             if(userDto.getImage() != null) {
@@ -68,11 +66,11 @@ public class AdminService {
             tutor.setId(id);
             modelMapper.map(userDto, tutor);
             userRepository.save(tutor);
-            return new ResponseEntity(OK);
+            return new ResponseEntity<>(OK);
         }
 
         @Transactional
-        public ResponseEntity createTutor(UserDto userDto) {
+        public ResponseEntity<?> createTutor(UserDto userDto) {
            authService.checkAvailabilityForRegistration(userDto);
            UserEntity tutor = authService.convertDtoToUser(userDto);
            tutor.setRole(TUTOR.name());
@@ -80,14 +78,14 @@ public class AdminService {
                 tutor.setPathToImage(imageService.saveImage(userDto.getImage()));
             }
            userRepository.save(tutor);
-           return new ResponseEntity(OK);
+           return new ResponseEntity<>(OK);
         }
 
-        public ResponseEntity deleteTutor(String username) {
+        public ResponseEntity<?> deleteTutor(String username) {
             UserEntity tutor = userService.findUserByUsername(username);
             imageService.deleteImage(tutor.getPathToImage());
             userRepository.delete(tutor);
-            return new ResponseEntity(OK);
+            return new ResponseEntity<>(OK);
         }
 
         @Transactional
@@ -102,19 +100,22 @@ public class AdminService {
 
             if (userDto.getEmail() != null) {
                  userRepository.findByEmail(userDto.getEmail()).ifPresent(
-                         ex -> new NonUniqueEntityException("пользователь с такими данными уже существует")
+                         ex -> new NonUniqueEntityException(
+                                 "пользователь с такими данными уже существует")
                  );
             }
 
             if (userDto.getPhone() != null) {
                 userRepository.findByPhone(userDto.getPhone()).ifPresent(
-                        ex -> new NonUniqueEntityException("пользователь с такими данными уже существует")
+                        ex -> new NonUniqueEntityException(
+                                "пользователь с такими данными уже существует")
                 );
             }
 
             if (userDto.getUsername() != null) {
                 userRepository.findByUsername(userDto.getUsername()).ifPresent(
-                        ex -> new NonUniqueEntityException("пользователь с такими данными уже существует")
+                        ex -> new NonUniqueEntityException(
+                                "пользователь с такими данными уже существует")
                 );
             }
 

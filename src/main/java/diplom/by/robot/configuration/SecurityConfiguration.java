@@ -15,6 +15,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * This class configures security part of the application.
+ * Auth was made with JWT token
+ * @version 1.0
+ * */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

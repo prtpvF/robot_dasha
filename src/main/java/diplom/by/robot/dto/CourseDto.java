@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Setter
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CourseDto {
 
         private Integer id;

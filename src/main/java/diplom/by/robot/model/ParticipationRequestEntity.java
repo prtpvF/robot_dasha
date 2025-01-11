@@ -28,4 +28,5 @@ public class ParticipationRequestEntity {
         private CourseEntity course;
 
         private String status;
+
 }

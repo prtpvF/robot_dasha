@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * This controller contains endpoint what connected with admins' business logic
+ * Make with REST architecture
+ * */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -42,6 +46,4 @@ public class AdminController {
         public ResponseEntity deleteTutor(@RequestBody String username) {
             return adminService.deleteTutor(username);
         }
-
-
 }

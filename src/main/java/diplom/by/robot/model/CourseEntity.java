@@ -49,4 +49,8 @@ public class CourseEntity {
 
         @OneToMany(mappedBy = "course")
         private List<ComplainEntity> complains = new ArrayList<>();
+
+        public void addStudent(UserEntity student) {
+                students.add(student);
+        }
 }

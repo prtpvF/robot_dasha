@@ -1,6 +1,7 @@
 package diplom.by.robot.service;
 
 import diplom.by.robot.dto.CourseDto;
+import diplom.by.robot.dto.UserDto;
 import diplom.by.robot.jwt.JwtUtil;
 import diplom.by.robot.model.CourseEntity;
 import diplom.by.robot.repository.CourseRepository;
@@ -36,14 +37,21 @@ public class CourseService {
                 CourseEntity course = converterUtil.convertCourseForCreating(courseDto);
                 course.setTutor(
                         userService.findUserByUsername(
-                                jwtUtil.validateTokenAndRetrieveClaim(token.substring(7))
-                        ));
+                               courseDto.getTutorUsername())
+                        );
                 course.setEndDate(courseDto.getEnd().toLocalDateTime());
                 course.setStartDate(courseDto.getStart().toLocalDateTime());
                 course.setPathToImg(imageService.saveImage(courseDto.getImage()));
                 courseRepository.save(course);
                 log.info("created course {}", course);
                 return new ResponseEntity(OK);
+        }
+
+        public List<UserDto> getAllCourseParticipant(Integer courseId) {
+                CourseEntity course = getCourseEntityById(courseId);
+                return course.getStudents().stream()
+                        .map(converterUtil::convertCourseParticipantToUserDto)
+                        .toList();
         }
 
         public List<CourseDto> getAll() {
@@ -56,6 +64,16 @@ public class CourseService {
                return dtoList;
         }
 
+        public CourseDto getCourseDtoById(Integer id) {
+                CourseEntity course = courseRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Курс не найден"));
+                return converterUtil.convertCourseToDto(course);
+        }
+
+        public CourseEntity getCourseEntityById(Integer id) {
+               return courseRepository.findById(id)
+                       .orElseThrow(() -> new EntityNotFoundException("Курс не найден"));
+        }
 
         @Transactional
         public ResponseEntity deleteCourse(int id) {
