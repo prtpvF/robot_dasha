@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,8 @@ import java.util.List;
 @Slf4j
 public class ImageService {
 
-        private final String UPLOAD_DIR = "/Users/mihail/Downloads/robot/uploads";
+        @Value("${save_path}")
+        private String UPLOAD_DIR;
 
         private final String[] IMAGE_EXTENSIONS = new String[]{"jpg", "jpeg", "png"};
 
@@ -46,7 +48,7 @@ public class ImageService {
                         throw new FileExtensionException("ошибка загрузки файла");
                     }
 
-            return destinationFile.getPath();
+            return "uploads/"+destinationFile.getName();
         }
 
         public void deleteImage(String pathToFile) {

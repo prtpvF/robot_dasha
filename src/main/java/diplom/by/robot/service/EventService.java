@@ -47,7 +47,7 @@ public class EventService {
 
         public ResponseEntity<?> deleteEvent(Integer eventId) {
             EventEntity eventEntity = getEventEntityById(eventId);
-            imageService.deleteImage(eventEntity.getPathToImage());
+            //imageService.deleteImage(eventEntity.getPathToImage());
             eventRepository.delete(eventEntity);
             return new ResponseEntity<>(HttpStatus.OK);
         }

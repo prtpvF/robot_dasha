@@ -2,17 +2,24 @@ spring:
   application:
     name: robot
   datasource:
-    username: mihail
-    password: postgres
-    url: jdbc:postgresql://localhost:5432/robot
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         show_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    protocol: smtp
 
-save_path: /Users/mihail/Downloads/robot/uploads
+save_path: ${IMAGE_DIR}
+excel_path: ${EXCEL_DIR}
 
 
 server:

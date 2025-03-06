@@ -1,7 +1,9 @@
 package diplom.by.robot.service;
 
+import diplom.by.robot.email.JavaEmailSenderBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class NotificationService {
 
-        private final JavaMailSender javaMailSender;
+        private final JavaEmailSenderBean javaMailSender;
 
         public void sendEmail(String toEmail,
                               String subject,
@@ -21,7 +23,7 @@ public class NotificationService {
             message.setTo(toEmail);
             message.setText(body);
             message.setSubject(subject);
-            javaMailSender.send(message);
+            javaMailSender.getJavaEmailSender().send(message);
 
             log.info("mail send successfully...");
         }

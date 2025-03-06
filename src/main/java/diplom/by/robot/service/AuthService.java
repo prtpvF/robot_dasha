@@ -26,12 +26,14 @@ public class AuthService {
 
         private final UserRepository userRepository;
         private final PasswordEncoder passwordEncoder;
+        private final NotificationService notificationService;
         private final JwtUtil jwtUtil;
 
 
         public UserDto registration(UserDto userDto) {
                 checkAvailabilityForRegistration(userDto);
                 userRepository.save(convertDtoToUser(userDto));
+                notificationService.sendEmail(userDto.getEmail(), "регистрация", "спасибо за регистрацию");
                 return userDto;
         }
 

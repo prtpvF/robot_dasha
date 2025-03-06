@@ -5,6 +5,7 @@ import diplom.by.robot.dto.UserDto;
 import diplom.by.robot.facade.CourseFacade;
 import diplom.by.robot.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,18 @@ public class CourseController {
         @DeleteMapping("/{id}")
         public ResponseEntity<?> deleteCourse(@PathVariable("id") int id) {
            return courseFacade.deleteCourse(id);
+        }
+
+        @PostMapping("/{id}")
+        public ResponseEntity<?> updateCourse(@PathVariable("id") int id, @RequestBody CourseDto courseDto) {
+            return courseService.updateCourse(courseDto, id);
+        }
+
+        @PostMapping("/import")
+        public ResponseEntity<CourseDto> importCourse() {
+            courseService.saveCoursesInXml();
+
+            return new ResponseEntity<CourseDto>(new CourseDto(), HttpStatus.OK);
         }
 
         @GetMapping("/all")

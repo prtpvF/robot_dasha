@@ -50,6 +50,10 @@ public class CourseEntity {
         @OneToMany(mappedBy = "course")
         private List<ComplainEntity> complains = new ArrayList<>();
 
+        @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
+        private List<ParticipationRequestEntity> requests = new ArrayList<>();
+
+
         public void addStudent(UserEntity student) {
                 students.add(student);
         }

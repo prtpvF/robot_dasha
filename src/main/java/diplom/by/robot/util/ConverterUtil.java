@@ -89,6 +89,7 @@ public class ConverterUtil {
                 courseDto.setPathToFile(course.getPathToImg());
                 courseDto.setStartDate(course.getStartDate().toString());
                 courseDto.setEndDate(course.getEndDate().toString());
+                courseDto.setDescription(course.getDescription());
                 courseDto.setTutorUsername(course.getTutor().getUsername());
                 return courseDto;
         }
